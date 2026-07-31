@@ -1,0 +1,44 @@
+name: boss-job-assistant-v4
+version: "4.0.0"
+language: zh-CN
+entrypoint: SKILL.md
+profile: user-profile.md
+resume_provenance: source-resume.json
+workflow: workflow.yaml
+filters: job-filter-rules.yaml
+report_template: report-template.md
+agents:
+  orchestrator: agents/Orchestrator.md
+  job_hunter: agents/JobHunter.md
+  recruiter_reply: agents/RecruiterReply.md
+  risk_guard: agents/RiskGuard.md
+  interview_coach: agents/InterviewCoach.md
+  career_strategist: agents/CareerStrategist.md
+  resume_engineer: agents/ResumeEngineer.md
+prompts:
+  orchestrator: prompts/orchestrator.md
+  job_analysis: prompts/job-analysis.md
+  recruiter_reply: prompts/recruiter-reply.md
+  introduction: prompts/introduction.md
+  risk_detection: prompts/risk-detection.md
+  interview_preparation: prompts/interview-preparation.md
+  career_strategy: prompts/career-strategy.md
+  resume_optimization: prompts/resume-optimization.md
+schemas:
+  run_input: schemas/run-input.schema.json
+  run_output: schemas/run-output.schema.json
+  job_analysis_input: schemas/job-analysis-input.schema.json
+  job_analysis_output: schemas/job-analysis-output.schema.json
+  recruiter_reply_input: schemas/recruiter-reply-input.schema.json
+  recruiter_reply_output: schemas/recruiter-reply-output.schema.json
+  risk_evaluation_input: schemas/risk-evaluation-input.schema.json
+  risk_evaluation_output: schemas/risk-evaluation-output.schema.json
+memory:
+  applied_history: memory/applied-history.json
+  recruiter_memory: memory/recruiter-memory.json
+  rejected_jobs: memory/rejected-jobs.json
+  interview_record: memory/interview-record.json
+  skill_feedback: memory/skill-feedback.json
+  career_growth: memory/career-growth.json
+  run_state: memory/run-state.json
+validation: scripts/validate.rb

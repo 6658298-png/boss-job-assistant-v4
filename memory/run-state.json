@@ -1,0 +1,9 @@
+{
+  "version": "4.0",
+  "status": "ready",
+  "last_run_at": null,
+  "last_safe_checkpoint": null,
+  "paused_reason": null,
+  "pending_user_actions": [],
+  "current_job": null
+}

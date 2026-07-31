@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/boss-job-assistant-v4/recruiter-reply-output.schema.json",
+  "title": "Recruiter Reply Output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "reply",
+    "send_allowed",
+    "needs_risk_review",
+    "supported_claims",
+    "unsupported_claims_removed"
+  ],
+  "properties": {
+    "reply": {
+      "type": "string"
+    },
+    "send_allowed": {
+      "type": "boolean"
+    },
+    "needs_risk_review": {
+      "type": "boolean"
+    },
+    "supported_claims": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "unsupported_claims_removed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "resume_action": {
+      "enum": [
+        "none",
+        "boss_online_resume",
+        "full_resume",
+        "pause"
+      ]
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/boss-job-assistant-v4/job-analysis-input.schema.json",
+  "title": "Job Analysis Input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "company",
+    "position",
+    "location",
+    "jd"
+  ],
+  "properties": {
+    "company": {
+      "type": "string",
+      "minLength": 1
+    },
+    "position": {
+      "type": "string",
+      "minLength": 1
+    },
+    "location": {
+      "type": "string",
+      "minLength": 1
+    },
+    "salary": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "work_mode": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "jd": {
+      "type": "string",
+      "minLength": 1
+    },
+    "recruiter_activity": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "job_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "recruiter": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

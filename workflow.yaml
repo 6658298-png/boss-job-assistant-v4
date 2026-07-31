@@ -1,0 +1,220 @@
+version: "4.0"
+name: BOSS直聘多Agent求职助手
+timezone: Asia/Shanghai
+
+paths:
+  profile: user-profile.md
+  filters: job-filter-rules.yaml
+  report_template: report-template.md
+  orchestrator: agents/Orchestrator.md
+  run_input_schema: schemas/run-input.schema.json
+  run_output_schema: schemas/run-output.schema.json
+  state: memory/run-state.json
+
+schedule:
+  weekdays:
+    - Monday
+    - Tuesday
+    - Wednesday
+    - Thursday
+    - Friday
+  start: "09:00"
+  end: "19:00"
+  interval_minutes: 20
+  trigger_times:
+    - "09:00"
+    - "09:20"
+    - "09:40"
+    - "10:00"
+    - "10:20"
+    - "10:40"
+    - "11:00"
+    - "11:20"
+    - "11:40"
+    - "12:00"
+    - "12:20"
+    - "12:40"
+    - "13:00"
+    - "13:20"
+    - "13:40"
+    - "14:00"
+    - "14:20"
+    - "14:40"
+    - "15:00"
+    - "15:20"
+    - "15:40"
+    - "16:00"
+    - "16:20"
+    - "16:40"
+    - "17:00"
+    - "17:20"
+    - "17:40"
+    - "18:00"
+    - "18:20"
+    - "18:40"
+    - "19:00"
+  required_checkpoints:
+    - "13:40"
+    - "19:00"
+  outside_window_action: no_op
+
+browser:
+  application: Google Chrome
+  site: BOSS直聘
+  require_logged_in: true
+  require_authorized_control: true
+  reread_page_after_every_action: true
+  stop_on_stale_or_unknown_page: true
+
+message_monitoring:
+  enabled: true
+  current_run_only: true
+  check_at:
+    - run_start
+    - after_each_job_action
+    - safe_wait_point
+    - run_end
+  minimum_poll_interval_seconds: 60
+  outside_run: scheduled_trigger_only
+
+steps:
+  - id: preflight
+    agent: agents/Orchestrator.md
+    prompt: prompts/orchestrator.md
+    checks:
+      - schedule_window
+      - browser_authorization
+      - logged_in_state
+      - profile_and_memory_loaded
+    on_failure: pause_and_report
+
+  - id: scan_messages
+    agent: agents/RecruiterReply.md
+    input_schema: schemas/recruiter-reply-input.schema.json
+    output_schema: schemas/recruiter-reply-output.schema.json
+    actions:
+      - refresh_message_center
+      - inspect_unread
+      - inspect_unfiltered_current_list_if_unread_filter_empty
+    priority: highest
+    checkpoint: run_start
+
+  - id: handle_recruiter_message
+    agent: agents/RecruiterReply.md
+    prompt: prompts/recruiter-reply.md
+    when: actionable_new_message
+    before_side_effect:
+      agent: agents/RiskGuard.md
+      input_schema: schemas/risk-evaluation-input.schema.json
+      output_schema: schemas/risk-evaluation-output.schema.json
+    reply_style:
+      - 简洁
+      - 真实
+      - 礼貌
+    resume_request:
+      prefer: BOSS在线简历
+      safe_send_option: 完整版简历
+    on_risk: pause_conversation_and_notify
+
+  - id: search_jobs
+    agent: agents/JobHunter.md
+    prompt: prompts/job-analysis.md
+    input_schema: schemas/job-analysis-input.schema.json
+    output_schema: schemas/job-analysis-output.schema.json
+    after: handle_recruiter_message
+    filter: job-filter-rules.yaml
+
+  - id: pre_send_gate
+    agent: agents/RiskGuard.md
+    prompt: prompts/risk-detection.md
+    input_schema: schemas/risk-evaluation-input.schema.json
+    output_schema: schemas/risk-evaluation-output.schema.json
+    require:
+      - no_hard_exclusion
+      - no_duplicate
+      - score_at_least_70
+      - no_sensitive_or_unsafe_page
+      - claims_supported_by_profile
+    on_failure: skip_or_pause
+
+  - id: greet_or_apply
+    agent: agents/RecruiterReply.md
+    prompt: prompts/introduction.md
+    when: pre_send_gate_passed
+    side_effect: send_message_or_resume
+    prohibition:
+      - repeat_click_on_unknown_state
+      - bypass_verification
+      - unsupported_claim
+
+  - id: verify_current_page
+    agent: agents/Orchestrator.md
+    success_text:
+      - 已向BOSS发送消息
+    accepted_equivalent_requires_same_run_and_current_page: true
+    not_success:
+      - 已读
+      - 送达
+      - 继续沟通
+      - 附件简历请求已发送
+      - 历史已沟通
+      - 按钮已点击
+      - 任务活动日志
+    unknown_state_action: record_unconfirmed_and_stop_reclick
+    confirmed_send_delay_seconds:
+      min: 3
+      max: 10
+
+  - id: scan_messages_end
+    agent: agents/RecruiterReply.md
+    input_schema: schemas/recruiter-reply-input.schema.json
+    output_schema: schemas/recruiter-reply-output.schema.json
+    actions:
+      - refresh_message_center
+      - inspect_unread
+      - inspect_unfiltered_current_list_if_unread_filter_empty
+    priority: highest
+    checkpoint: run_end
+
+  - id: handle_recruiter_message_end
+    agent: agents/RecruiterReply.md
+    prompt: prompts/recruiter-reply.md
+    when: actionable_new_message_at_run_end
+    before_side_effect:
+      agent: agents/RiskGuard.md
+      input_schema: schemas/risk-evaluation-input.schema.json
+      output_schema: schemas/risk-evaluation-output.schema.json
+    reply_style:
+      - 简洁
+      - 真实
+      - 礼貌
+    on_risk: pause_conversation_and_notify
+
+  - id: persist
+    agent: agents/Orchestrator.md
+    writes:
+      - memory/applied-history.json
+      - memory/recruiter-memory.json
+      - memory/rejected-jobs.json
+      - memory/run-state.json
+    write_only_confirmed_observations: true
+
+  - id: report
+    agent: agents/Orchestrator.md
+    template: report-template.md
+    output_schema: schemas/run-output.schema.json
+
+global_pause_conditions:
+  - login_expired
+  - captcha
+  - sms_verification
+  - face_verification
+  - security_challenge
+  - account_abnormal
+  - operation_too_frequent
+  - payment_or_deposit
+  - identity_or_bank_information
+  - contract_or_authorization
+  - remote_control_request
+  - unknown_download
+  - unsafe_or_unreadable_page

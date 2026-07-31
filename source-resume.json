@@ -1,0 +1,8 @@
+{
+  "file_name": null,
+  "sha256": null,
+  "pages": null,
+  "pdf_title": null,
+  "fact_policy": "Populate user-profile.md only from a locally verified resume; keep the resume outside the public repository.",
+  "resume_embedded": false
+}

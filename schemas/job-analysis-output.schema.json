@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/boss-job-assistant-v4/job-analysis-output.schema.json",
+  "title": "Job Analysis Output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "match_score",
+    "recommendation",
+    "reasons",
+    "hard_exclusions",
+    "evidence",
+    "gaps",
+    "risks",
+    "duplicate"
+  ],
+  "properties": {
+    "match_score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "recommendation": {
+      "enum": [
+        "priority",
+        "eligible",
+        "manual_review",
+        "reject"
+      ]
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "hard_exclusions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "requirement",
+          "profile_fact"
+        ],
+        "properties": {
+          "requirement": {
+            "type": "string"
+          },
+          "profile_fact": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "duplicate": {
+      "type": "boolean"
+    }
+  }
+}

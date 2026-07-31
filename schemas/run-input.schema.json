@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/boss-job-assistant-v4/run-input.schema.json",
+  "title": "BOSS Job Assistant V4 Run Input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "triggered_at",
+    "timezone",
+    "mode",
+    "browser"
+  ],
+  "properties": {
+    "triggered_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "timezone": {
+      "const": "Asia/Shanghai"
+    },
+    "mode": {
+      "enum": [
+        "scheduled",
+        "manual",
+        "dry_run"
+      ]
+    },
+    "browser": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authorized",
+        "logged_in",
+        "page_readable"
+      ],
+      "properties": {
+        "authorized": {
+          "type": "boolean"
+        },
+        "logged_in": {
+          "type": "boolean"
+        },
+        "page_readable": {
+          "type": "boolean"
+        },
+        "current_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "user_instruction": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

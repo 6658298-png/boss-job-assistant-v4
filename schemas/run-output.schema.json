@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/boss-job-assistant-v4/run-output.schema.json",
+  "title": "BOSS Job Assistant V4 Run Output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "status",
+    "started_at",
+    "finished_at",
+    "messages",
+    "applications",
+    "risks",
+    "memory_updates",
+    "report"
+  ],
+  "properties": {
+    "status": {
+      "enum": [
+        "completed",
+        "partial",
+        "paused_risk",
+        "paused_environment",
+        "outside_window"
+      ]
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "messages": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "new_count",
+        "handled_count",
+        "items"
+      ],
+      "properties": {
+        "new_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "handled_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "applications": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "confirmed",
+        "unconfirmed",
+        "skipped"
+      ],
+      "properties": {
+        "confirmed": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "company",
+              "position",
+              "confirmation_text",
+              "confirmed_at",
+              "same_run_current_page"
+            ],
+            "properties": {
+              "company": {
+                "type": "string",
+                "minLength": 1
+              },
+              "position": {
+                "type": "string",
+                "minLength": 1
+              },
+              "confirmation_text": {
+                "type": "string",
+                "minLength": 1
+              },
+              "confirmed_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "same_run_current_page": {
+                "const": true
+              }
+            }
+          }
+        },
+        "unconfirmed": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "skipped": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "memory_updates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "report": {
+      "type": "string"
+    }
+  }
+}

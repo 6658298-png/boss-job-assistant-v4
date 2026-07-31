@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/boss-job-assistant-v4/risk-evaluation-input.schema.json",
+  "title": "Risk Evaluation Input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "action",
+    "page_text",
+    "recruiter_request"
+  ],
+  "properties": {
+    "action": {
+      "type": "string",
+      "minLength": 1
+    },
+    "page_text": {
+      "type": "string"
+    },
+    "recruiter_request": {
+      "type": "string"
+    },
+    "proposed_message": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "attachments_or_links": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

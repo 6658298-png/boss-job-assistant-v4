@@ -1,0 +1,5 @@
+.DS_Store
+*.pdf
+.env
+.env.*
+memory/*.local.json

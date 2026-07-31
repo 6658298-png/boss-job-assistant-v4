@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/boss-job-assistant-v4/recruiter-reply-input.schema.json",
+  "title": "Recruiter Reply Input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "company",
+    "position",
+    "latest_message",
+    "conversation"
+  ],
+  "properties": {
+    "company": {
+      "type": "string",
+      "minLength": 1
+    },
+    "position": {
+      "type": "string",
+      "minLength": 1
+    },
+    "jd": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "latest_message": {
+      "type": "string",
+      "minLength": 1
+    },
+    "conversation": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "speaker",
+          "text"
+        ],
+        "properties": {
+          "speaker": {
+            "enum": [
+              "user",
+              "recruiter"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

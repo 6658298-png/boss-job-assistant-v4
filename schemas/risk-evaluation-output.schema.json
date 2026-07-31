@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/boss-job-assistant-v4/risk-evaluation-output.schema.json",
+  "title": "Risk Evaluation Output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "decision",
+    "level",
+    "reasons",
+    "prohibited_actions",
+    "user_notice"
+  ],
+  "properties": {
+    "decision": {
+      "enum": [
+        "allow",
+        "review",
+        "pause"
+      ]
+    },
+    "level": {
+      "enum": [
+        "none",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "prohibited_actions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "user_notice": {
+      "type": "string"
+    },
+    "safe_next_step": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

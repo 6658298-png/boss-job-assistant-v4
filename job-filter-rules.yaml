@@ -1,0 +1,128 @@
+version: "4.0"
+profile_source: user-profile.md
+
+target:
+  locations:
+    required_any:
+      - "[目标城市]"
+      - 明确远程
+    travel:
+      allowed_if_explicit_and_reasonable: true
+      require_user_confirmation_if_unclear: true
+  salary_k:
+    resume_expectation:
+      min: null
+      max: null
+    unknown_salary_action: manual_review
+
+role_priority:
+  primary:
+    - 软件实施工程师
+    - AI实施工程师
+    - 技术支持工程师
+    - 系统运维工程师
+    - Linux运维工程师
+    - 云运维工程师
+    - 网络工程师
+    - Java开发工程师
+    - WordPress工程师
+    - 网站运维工程师
+  secondary:
+    - 全栈开发工程师
+    - AI应用工程师
+    - 软件项目经理
+    - 技术项目经理
+    - Shopify技术支持
+    - WooCommerce技术支持
+
+evidence_keywords:
+  strong:
+    - Java
+    - Spring
+    - MyBatis
+    - REST API
+    - Linux
+    - Windows
+    - MySQL
+    - Redis
+    - Nginx
+    - Tomcat
+    - WordPress
+    - WooCommerce
+    - Shopify
+    - PayPal
+    - SEO
+    - 项目实施
+    - 项目交付
+    - 网络管理
+  bounded:
+    Docker: 简历列为技能并用于应用环境相关工作，不扩展为大规模容器平台经验
+    Kubernetes: 仅可表述为K8s基础
+    cloud:
+      keywords:
+        - 阿里云
+        - 腾讯云
+        - AWS
+        - Azure
+        - Cloudflare
+      claim_limit: 只陈述简历技能栏列出，不虚构具体云项目、认证、规模或客户
+    ai:
+      keywords:
+        - GPT
+        - Claude
+        - AI Agent
+      claim_limit: AI辅助脚本、代码、排障、测试、文档和任务拆解，不表述为模型训练或算法研发
+
+hard_exclusions:
+  role_or_industry:
+    - 银行相关
+    - 军工
+    - 国防
+    - 涉密
+    - 内网开发
+    - 纯销售
+    - 电话销售
+    - 渠道销售
+    - 明显低匹配
+    - 必须虚构经历才能匹配
+  employment:
+    - 软件外包
+    - 人力外包
+    - 驻场外包
+    - 第三方派遣
+  companies:
+    []
+  uncertain_affiliate_action: manual_review
+
+hard_requirement_gaps:
+  action: reject_or_manual_review
+  examples:
+    - 用户未具备的强制证书
+    - 大规模Kubernetes生产集群
+    - 大模型训练或算法研发
+    - 需要特定行业深度经验但简历无证据
+
+scoring:
+  weights:
+    evidence_skill_match: 40
+    experience_fit: 20
+    location_and_work_mode: 15
+    salary_fit: 10
+    employer_quality: 10
+    recruiter_activity: 5
+  cap: 100
+  decisions:
+    priority: 85
+    eligible: 70
+    manual_review: 55
+    reject_below: 55
+  hard_exclusion_overrides_score: true
+
+deduplication:
+  keys:
+    - company
+    - position
+    - recruiter
+    - job_url
+  memory_file: memory/applied-history.json
+  duplicate_action: skip

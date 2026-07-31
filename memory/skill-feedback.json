@@ -1,0 +1,10 @@
+{
+  "version": "4.0",
+  "observations": [],
+  "metrics": {
+    "confirmed_applications": 0,
+    "recruiter_replies": 0,
+    "interviews": 0,
+    "offers": 0
+  }
+}
