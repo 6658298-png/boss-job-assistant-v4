@@ -23,79 +23,26 @@ target:
 
 role_priority:
   primary:
-    - 软件实施工程师
-    - AI实施工程师
-    - 技术支持工程师
-    - 系统运维工程师
-    - Linux运维工程师
-    - 云运维工程师
-    - 网络工程师
-    - Java开发工程师
-    - WordPress工程师
-    - 网站运维工程师
+    []
   secondary:
-    - 全栈开发工程师
-    - AI应用工程师
-    - 软件项目经理
-    - 技术项目经理
-    - Shopify技术支持
-    - WooCommerce技术支持
+    []
 
 evidence_keywords:
   strong:
-    - Java
-    - Spring
-    - MyBatis
-    - REST API
-    - Linux
-    - Windows
-    - MySQL
-    - Redis
-    - Nginx
-    - Tomcat
-    - WordPress
-    - WooCommerce
-    - Shopify
-    - PayPal
-    - SEO
-    - 项目实施
-    - 项目交付
-    - 网络管理
+    []
   bounded:
-    Docker: 简历列为技能并用于应用环境相关工作，不扩展为大规模容器平台经验
-    Kubernetes: 仅可表述为K8s基础
     cloud:
-      keywords:
-        - 阿里云
-        - 腾讯云
-        - AWS
-        - Azure
-        - Cloudflare
-      claim_limit: 只陈述简历技能栏列出，不虚构具体云项目、认证、规模或客户
+      keywords: []
+      claim_limit: 只陈述本地私有档案明确记录的事实，不补充项目、认证、规模或客户
     ai:
-      keywords:
-        - GPT
-        - Claude
-        - AI Agent
-      claim_limit: AI辅助脚本、代码、排障、测试、文档和任务拆解，不表述为模型训练或算法研发
+      keywords: []
+      claim_limit: 只陈述本地私有档案明确记录的事实，不将目标或兴趣写成既有经验
 
 hard_exclusions:
   role_or_industry:
-    - 银行相关
-    - 军工
-    - 国防
-    - 涉密
-    - 内网开发
-    - 纯销售
-    - 电话销售
-    - 渠道销售
-    - 明显低匹配
-    - 必须虚构经历才能匹配
+    []
   employment:
-    - 软件外包
-    - 人力外包
-    - 驻场外包
-    - 第三方派遣
+    []
   companies:
     []
   uncertain_affiliate_action: manual_review
@@ -104,8 +51,8 @@ hard_requirement_gaps:
   action: reject_or_manual_review
   examples:
     - 用户未具备的强制证书
-    - 大规模Kubernetes生产集群
-    - 大模型训练或算法研发
+    - 未经证据支持的规模化平台经验
+    - 未经证据支持的算法或研发经历
     - 需要特定行业深度经验但简历无证据
 
 scoring:
