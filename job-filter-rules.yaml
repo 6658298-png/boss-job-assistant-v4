@@ -13,6 +13,12 @@ target:
     resume_expectation:
       min: null
       max: null
+    candidate_gate:
+      minimum_source: user-profile.md
+      compare: listed_lower_bound_gte_resume_min
+      below_minimum_action: reject
+      unknown_or_negotiable_action: manual_review
+      range_rule: compare_the_listed_lower_bound_not_the_upper_bound
     unknown_salary_action: manual_review
 
 role_priority:

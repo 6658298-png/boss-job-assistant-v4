@@ -140,6 +140,15 @@ workflow_refs = []
 collect_file_references(workflow, workflow_refs)
 workflow_refs.uniq.each { |ref| validate_reference(ref, "workflow.yaml") }
 
+salary_rules = load_yaml(ROOT.join("job-filter-rules.yaml")).dig("target", "salary_k")
+fail_with("salary floor rules missing") unless salary_rules.is_a?(Hash)
+salary_gate = salary_rules["candidate_gate"]
+fail_with("salary floor gate missing") unless salary_gate.is_a?(Hash)
+fail_with("salary floor must compare the listed lower bound") unless salary_gate["compare"] == "listed_lower_bound_gte_resume_min"
+fail_with("below-minimum salary must be rejected") unless salary_gate["below_minimum_action"] == "reject"
+minimum_salary = salary_rules.dig("resume_expectation", "min")
+fail_with("resume salary minimum must be numeric or null") unless minimum_salary.nil? || minimum_salary.is_a?(Numeric)
+
 Dir.glob(ROOT.join("**/*.md")).sort.each do |file|
   source = Pathname.new(file).relative_path_from(ROOT).to_s
   Pathname.new(file).read.scan(/`([^`\s]+\.(?:md|yaml|json|rb))`/).flatten.each do |ref|

@@ -132,6 +132,7 @@ steps:
     require:
       - no_hard_exclusion
       - no_duplicate
+      - salary_floor_met
       - score_at_least_70
       - no_sensitive_or_unsafe_page
       - claims_supported_by_profile
