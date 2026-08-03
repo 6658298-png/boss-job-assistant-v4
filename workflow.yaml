@@ -76,6 +76,10 @@ message_monitoring:
     - run_end
   minimum_poll_interval_seconds: 60
   outside_run: scheduled_trigger_only
+  failure_isolation:
+    message_list_or_reply_failure: record_and_continue_to_job_screening
+    no_repeat_send_on_unknown_state: true
+    whole_run_pause_requires_job_flow_or_global_risk: true
 
 steps:
   - id: preflight
@@ -98,6 +102,7 @@ steps:
       - inspect_unfiltered_current_list_if_unread_filter_empty
     priority: highest
     checkpoint: run_start
+    on_failure: record_message_step_failure_and_continue
 
   - id: handle_recruiter_message
     agent: agents/RecruiterReply.md
@@ -114,14 +119,19 @@ steps:
     resume_request:
       prefer: BOSS在线简历
       safe_send_option: 完整版简历
+    on_action_failure: record_unconfirmed_and_continue_to_search_jobs
     on_risk: pause_conversation_and_notify
+    risk_scope: current_conversation_unless_global_pause_condition
 
   - id: search_jobs
     agent: agents/JobHunter.md
     prompt: prompts/job-analysis.md
     input_schema: schemas/job-analysis-input.schema.json
     output_schema: schemas/job-analysis-output.schema.json
-    after: handle_recruiter_message
+    after_any_status:
+      - messages_handled
+      - no_actionable_messages
+      - message_step_failed
     filter: job-filter-rules.yaml
 
   - id: pre_send_gate
@@ -176,6 +186,7 @@ steps:
       - inspect_unfiltered_current_list_if_unread_filter_empty
     priority: highest
     checkpoint: run_end
+    on_failure: record_message_step_failure_without_invalidating_job_results
 
   - id: handle_recruiter_message_end
     agent: agents/RecruiterReply.md
@@ -218,4 +229,10 @@ global_pause_conditions:
   - contract_or_authorization
   - remote_control_request
   - unknown_download
-  - unsafe_or_unreadable_page
+  - whole_site_or_login_state_unknown
+  - job_search_or_current_job_page_unreadable
+
+non_global_failures:
+  - message_center_list_empty_or_unreadable
+  - unread_message_scan_failed
+  - routine_reply_failed_or_unconfirmed
